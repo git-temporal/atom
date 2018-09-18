@@ -437,14 +437,7 @@ class AtomApplication extends EventEmitter {
       if (!this.quitting) {
         this.quitting = true
         event.preventDefault()
-        const windowUnloadPromises = this.getAllWindows().map(async window => {
-          const unloaded = await window.prepareToUnload()
-          if (unloaded) {
-            window.close()
-            await window.closedPromise
-          }
-          return unloaded
-        })
+        const windowUnloadPromises = this.getAllWindows().map(window => window.prepareToUnload())
         const windowUnloadedResults = await Promise.all(windowUnloadPromises)
         if (windowUnloadedResults.every(Boolean)) {
           app.quit()
